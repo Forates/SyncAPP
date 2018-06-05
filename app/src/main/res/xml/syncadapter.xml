@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sync-adapter xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accountType="br.com.inovamobil.android"
+    android:allowParallelSyncs="false"
+    android:contentAuthority="br.com.exemplo.syncapp.syncadapter.provider"
+    android:isAlwaysSyncable="true"
+    android:supportsUploading="false"
+    android:userVisible="false" />
