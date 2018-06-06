@@ -9,6 +9,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.Serializable;
+
+import br.com.exemplo.syncapp.repositorio.DadosEnvio;
+
 public class MainActivity extends Activity {
 
 
@@ -21,6 +25,13 @@ public class MainActivity extends Activity {
     public static final String ACCOUNT = "Reader";
     // Instance fields
     Account mAccount;
+
+    // Sync interval constants
+    public static final long SECONDS_PER_MINUTE = 60L;
+    public static final long SYNC_INTERVAL_IN_MINUTES = 1L;
+    public static final long SYNC_INTERVAL =
+            SYNC_INTERVAL_IN_MINUTES *
+                    SECONDS_PER_MINUTE;
 
     /**
      * Create a new dummy account for the sync adapter
@@ -65,23 +76,67 @@ public class MainActivity extends Activity {
         btnExecutarSyncAdapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ExecutarSyncAdapter(true);
+            }
+        });
+
+        Button btnAdicionarPendencia = findViewById(R.id.btnAdicionarPendencia);
+
+        btnAdicionarPendencia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ExecutarSyncAdapter(false);
+            }
+        });
+
+        Button btnExecutarPendenciaPeriodico = findViewById(R.id.btnExecutarPeriodico);
+
+        btnExecutarPendenciaPeriodico.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 ExecutarSyncAdapter();
             }
         });
 
     }
 
-    public void ExecutarSyncAdapter() {
+    public void ExecutarSyncAdapter(boolean blnApenasSincronizar) {
         // Pass the settings flags by inserting them in a bundle
         Bundle settingsBundle = new Bundle();
-        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        if (blnApenasSincronizar) {
+            settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+            settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        } else {
+            settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+            settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+            settingsBundle.putString("DadosEnvio-Sistema", RetornarDadosEnvio().Sistema);
+            settingsBundle.putString("DadosEnvio-Endereco", RetornarDadosEnvio().Endereco);
+            settingsBundle.putString("DadosEnvio-Retorno", RetornarDadosEnvio().Retorno);
+            settingsBundle.putString("DadosEnvio-IntecaoRetorno", RetornarDadosEnvio().IntencaoRetorno);
+        }
+
         /*
          * Request the sync for the default account, authority, and
          * manual sync settings
          */
         ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
 
+    }
+
+    public void ExecutarSyncAdapter() {
+
+        ContentResolver.setSyncAutomatically(mAccount,
+                AUTHORITY, true);
+
+        ContentResolver.addPeriodicSync(
+                mAccount,
+                AUTHORITY,
+                Bundle.EMPTY,
+                SYNC_INTERVAL);
+    }
+
+    private DadosEnvio RetornarDadosEnvio() {
+        return new DadosEnvio("Reader", "http://www.google.com.br", "OK!", "ok");
     }
 
 }
