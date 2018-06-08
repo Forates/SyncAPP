@@ -11,5 +11,5 @@ public class ApiConst {
 
     public static String CODIGOHDN;
 
-    public static String ENDERECOAPI;
+    public static String ENDERECOAPI = "http://192.168.0.117:57291/";
 }

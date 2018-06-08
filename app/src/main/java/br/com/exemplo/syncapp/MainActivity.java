@@ -12,6 +12,9 @@ import android.widget.Button;
 import java.io.Serializable;
 
 import br.com.exemplo.syncapp.repositorio.DadosEnvio;
+import br.com.exemplo.syncapp.util.api.base.IAcaoResponse;
+import br.com.exemplo.syncapp.util.api.base.acao.IAcaoRequisicao;
+import br.com.exemplo.syncapp.util.api.servico.ServicoGenerico;
 
 public class MainActivity extends Activity {
 
@@ -81,11 +84,22 @@ public class MainActivity extends Activity {
         });
 
         Button btnAdicionarPendencia = findViewById(R.id.btnAdicionarPendencia);
-
+        final ServicoGenerico<Object> servicoGenerico = new ServicoGenerico(this);
         btnAdicionarPendencia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ExecutarSyncAdapter(false);
+                servicoGenerico.get(new IAcaoResponse() {
+                    @Override
+                    public void execute(Object response) {
+                        Object obj = response;
+                    }
+                }, new IAcaoRequisicao() {
+                    @Override
+                    public void execute() {
+
+                    }
+                }, "/api/versao");
             }
         });
 

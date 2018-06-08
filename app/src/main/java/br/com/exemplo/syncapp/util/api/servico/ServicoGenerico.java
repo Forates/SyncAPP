@@ -13,7 +13,7 @@ import br.com.exemplo.syncapp.util.api.base.acao.IAcaoRequisicao;
 
 public class ServicoGenerico<T> extends ServicoRequisicaoBase{
 
-    protected ServicoGenerico(Context ctxContexto) {
+    public ServicoGenerico(Context ctxContexto) {
         super(ctxContexto);
     }
 

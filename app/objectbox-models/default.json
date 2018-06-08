@@ -1,0 +1,78 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:2177972329912135956",
+      "lastPropertyId": "5:2580150709429865426",
+      "name": "DadosEnvio",
+      "properties": [
+        {
+          "id": "1:958808644503176284",
+          "name": "Sistema"
+        },
+        {
+          "id": "2:3115314458802803543",
+          "name": "Endereco"
+        },
+        {
+          "id": "3:6268303388814660085",
+          "name": "Retorno"
+        },
+        {
+          "id": "4:7190172380417848754",
+          "name": "IntencaoRetorno"
+        },
+        {
+          "id": "5:2580150709429865426",
+          "name": "ID"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:6138274954264619105",
+      "lastPropertyId": "6:1146846692101399326",
+      "name": "RepositorioEnvio",
+      "properties": [
+        {
+          "id": "1:2036077918096175078",
+          "name": "ID"
+        },
+        {
+          "id": "2:8827927010775223552",
+          "name": "Sistema"
+        },
+        {
+          "id": "3:105543822591371612",
+          "name": "Endereco"
+        },
+        {
+          "id": "4:4188009548561230312",
+          "name": "Retorno"
+        },
+        {
+          "id": "5:1033735784959600051",
+          "name": "IntencaoRetorno"
+        },
+        {
+          "id": "6:1146846692101399326",
+          "name": "Enviado"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "2:6138274954264619105",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 4,
+  "modelVersionParserMinimum": 4,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}
