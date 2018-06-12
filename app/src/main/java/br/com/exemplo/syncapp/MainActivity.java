@@ -6,11 +6,16 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+import org.json.JSONObject;
 
 import java.io.Serializable;
 
+import br.com.exemplo.syncapp.model.Versao;
 import br.com.exemplo.syncapp.repositorio.DadosEnvio;
 import br.com.exemplo.syncapp.util.api.base.IAcaoResponse;
 import br.com.exemplo.syncapp.util.api.base.acao.IAcaoRequisicao;
@@ -84,22 +89,35 @@ public class MainActivity extends Activity {
         });
 
         Button btnAdicionarPendencia = findViewById(R.id.btnAdicionarPendencia);
-        final ServicoGenerico<Object> servicoGenerico = new ServicoGenerico(this);
+        ServicoGenerico<Versao> servicoGenerico = new ServicoGenerico<Versao>(this);
+
+        IAcaoResponse<Versao> acaoResponse = new IAcaoResponse<Versao>() {
+            @Override
+            public void execute(Versao response) {
+                try {
+                    if(response == null)
+                        return;
+                    Log.i("SYNC-RESPONSE", "Compatibilidade: " + response.getCompatibilidade());
+                    Toast.makeText(getApplicationContext(),"Resultado: "+response.getVersao(),Toast.LENGTH_LONG).show();
+                }catch (Exception e){
+                    Toast.makeText(getApplicationContext(),"Erro",Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
+        IAcaoRequisicao acaoError = new IAcaoRequisicao() {
+            @Override
+            public void execute() {
+                Toast.makeText(getApplicationContext(),"Erro",Toast.LENGTH_LONG).show();
+            }
+        };
+
+        servicoGenerico.get(acaoResponse,acaoError, "/api/versao",Versao.class);
+
         btnAdicionarPendencia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ExecutarSyncAdapter(false);
-                servicoGenerico.get(new IAcaoResponse() {
-                    @Override
-                    public void execute(Object response) {
-                        Object obj = response;
-                    }
-                }, new IAcaoRequisicao() {
-                    @Override
-                    public void execute() {
-
-                    }
-                }, "/api/versao");
             }
         });
 
@@ -115,6 +133,7 @@ public class MainActivity extends Activity {
     }
 
     public void ExecutarSyncAdapter(boolean blnApenasSincronizar) {
+
         // Pass the settings flags by inserting them in a bundle
         Bundle settingsBundle = new Bundle();
         if (blnApenasSincronizar) {

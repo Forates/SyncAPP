@@ -23,6 +23,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.util.List;
+
+import br.com.exemplo.syncapp.model.Versao;
 import br.com.exemplo.syncapp.util.api.base.acao.IAcaoRequisicao;
 import br.com.exemplo.syncapp.util.api.base.config.ApiConst;
 import br.com.exemplo.syncapp.util.api.base.config.AuthJSONRequest;
@@ -45,7 +47,7 @@ public class ServicoRequisicaoBase {
 
     public void PostJSON(String strUrl, JSONObject jsnObjetoParam,
                          Response.Listener<JSONObject> lstnSucesso,
-                         Response.ErrorListener lstnErro, boolean blnAutenticar) {
+                         Response.ErrorListener lstnErro, boolean blnAutenticar) throws Exception {
         try {
 
             JsonObjectRequest lclsRequisicao;
@@ -62,7 +64,7 @@ public class ServicoRequisicaoBase {
             FilaExecucao.FilaAtual(pctxContexto).AdicionarRequisicaoNaFila(lclsRequisicao);
         }catch (Exception e){
             Log.i("SYNC-MENSAGEM_SERVICE_",e.getMessage());
-            validaErros((VolleyError) e,null);
+            throw new Exception(validaErros((VolleyError) e,null));
 
         }
 
@@ -70,7 +72,7 @@ public class ServicoRequisicaoBase {
 
     protected void PutJSON(String strUrl, JSONObject jsnObjetoParam,
                            Response.Listener<JSONObject> lstnSucesso,
-                           Response.ErrorListener lstnErro, boolean blnAutenticar) {
+                           Response.ErrorListener lstnErro, boolean blnAutenticar) throws Exception {
         try {
             JsonObjectRequest lclsRequisicao;
 
@@ -85,24 +87,24 @@ public class ServicoRequisicaoBase {
 
             FilaExecucao.FilaAtual(pctxContexto).AdicionarRequisicaoNaFila(lclsRequisicao);
         }catch (Exception e){
-            validaErros((VolleyError) e,null);
+           throw new Exception(validaErros((VolleyError) e,null));
         }
     }
 
     protected void GetJSONArray(String strUrl, Response.Listener<JSONArray> lstnSucesso,
-                                Response.ErrorListener lstnErro) {
+                                Response.ErrorListener lstnErro) throws Exception {
         try {
             JsonArrayRequest lclsRequisicao;
             lclsRequisicao = new JsonArrayRequest(strUrl, lstnSucesso, lstnErro);
 
             FilaExecucao.FilaAtual(pctxContexto).AdicionarRequisicaoNaFila(lclsRequisicao);
         }catch (Exception e){
-            validaErros((VolleyError) e,null);
+           throw new Exception(validaErros((VolleyError) e,null));
         }
     }
 
-    protected void GetJSONObject(String strUrl, Response.Listener<JSONObject> lstnSucesso,
-                                 Response.ErrorListener lstnErro) {
+    protected void GetJSONObject(String strUrl, Response.Listener lstnSucesso,
+                                 Response.ErrorListener lstnErro) throws Exception {
         try {
 
             JsonObjectRequest lclsRequisicao;
@@ -110,13 +112,14 @@ public class ServicoRequisicaoBase {
 
             FilaExecucao.FilaAtual(pctxContexto).AdicionarRequisicaoNaFila(lclsRequisicao);
         }catch (Exception e){
-            validaErros((VolleyError) e,null);
+            throw new Exception(validaErros((VolleyError) e,null));
         }
     }
 
     protected <T> T ConverterJSONEmObject(JSONObject clsObjeto, Class<T> clClasse, FieldNamingPolicy clsPolicy) {
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(clsPolicy)
+                .serializeNulls()
                 .create();
         return gson.fromJson(clsObjeto.toString(), clClasse);
     }
@@ -128,6 +131,7 @@ public class ServicoRequisicaoBase {
     protected <T> List<T> ConverterJSONEmList(JSONObject clsObjeto) {
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+                .serializeNulls()
                 .create();
 
         Type listType = new TypeToken<List<T>>(){}.getType();
@@ -141,17 +145,22 @@ public class ServicoRequisicaoBase {
         return new JSONObject(json);
     }
 
-    public void validaErros(VolleyError volleyError, IAcaoRequisicao acao) {
+    public String validaErros(VolleyError volleyError, IAcaoRequisicao acao) {
         if (volleyError instanceof TimeoutError || volleyError instanceof NoConnectionError) {
             Log.i("SYNC-VOLEY_",ERRO_TIMEOUT+": "+volleyError.getMessage());
+            return ERRO_TIMEOUT;
         } else if (volleyError instanceof AuthFailureError) {
             Log.i("SYNC-VOLEY_",ERRO_AUTH+": "+volleyError.getMessage());
+            return ERRO_AUTH;
         } else if (volleyError instanceof ServerError) {
             Log.i("SYNC-VOLEY_",ERRO_SERVER+": "+volleyError.getMessage());
+            return  ERRO_SERVER;
         } else if (volleyError instanceof NetworkError) {
             Log.i("SYNC-VOLEY_",ERRO_NETWORK+": "+volleyError.getMessage());
+            return  ERRO_NETWORK;
         } else if (volleyError instanceof ParseError) {
             Log.i("SYNC-VOLEY_",ERRO_PARSE+": "+volleyError.getMessage());
+            return  ERRO_PARSE;
         } else {
             //Toast.makeText(pctxContexto, volleyError.getMessage(), Toast.LENGTH_LONG).show();
             Log.i("SYNC-VOLEY_",volleyError.getLocalizedMessage());
@@ -160,6 +169,8 @@ public class ServicoRequisicaoBase {
         if(acao != null){
             acao.execute();
         }
+
+        return volleyError.getLocalizedMessage();
 
     }
 }

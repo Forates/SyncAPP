@@ -23,16 +23,17 @@ public class ServicoGenerico<T> extends ServicoRequisicaoBase{
             PostJSON(URL+rota, jsonObject, response.result(jsonObject),response.error(), false);
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    public void get (final IAcaoResponse acaoResponse, final IAcaoRequisicao acaoErro, String rota){
+    public void get (final IAcaoResponse acaoResponse, final IAcaoRequisicao acaoErro, String rota, final Class classe){
         try {
             Response.Listener<JSONObject> lstResponse = new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                     Class<T> objectResponse = null;
-                             ConverterJSONEmObject(response,objectResponse);
+                    T objectResponse = (T) ConverterJSONEmObject(response,classe);
                     acaoResponse.execute(objectResponse);
                 }
             };
@@ -72,6 +73,8 @@ public class ServicoGenerico<T> extends ServicoRequisicaoBase{
             } catch (JSONException e) {
                 e.printStackTrace();
                 Log.i("SYNC-HTTP_", "Erro ao atualizar: "+ e.getMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
     }
 
