@@ -6,14 +6,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
-import br.com.exemplo.syncapp.util.api.base.IAcaoResponse;
+import br.com.exemplo.syncapp.util.api.base.acao.IAcaoResponse;
 import br.com.exemplo.syncapp.util.api.base.IResponse;
 import br.com.exemplo.syncapp.util.api.base.ServicoRequisicaoBase;
 import br.com.exemplo.syncapp.util.api.base.acao.IAcaoRequisicao;
 
-public class ServicoGenerico<T> extends ServicoRequisicaoBase{
+public class ServicoComObjeto<T> extends ServicoRequisicaoBase{
 
-    public ServicoGenerico(Context ctxContexto) {
+    public ServicoComObjeto(Context ctxContexto) {
         super(ctxContexto);
     }
 
@@ -77,6 +77,5 @@ public class ServicoGenerico<T> extends ServicoRequisicaoBase{
                 e.printStackTrace();
             }
     }
-
-
+    
 }
