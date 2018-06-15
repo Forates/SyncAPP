@@ -11,11 +11,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import br.com.exemplo.syncapp.model.Versao;
 import br.com.exemplo.syncapp.repositorio.DadosEnvio;
 import br.com.exemplo.syncapp.util.api.base.acao.IAcaoResponse;
 import br.com.exemplo.syncapp.util.api.base.acao.IAcaoRequisicao;
 import br.com.exemplo.syncapp.util.api.servico.ServicoComObjeto;
+import br.com.exemplo.syncapp.util.api.servico.ServicoComString;
 
 public class MainActivity extends Activity {
 
@@ -85,30 +88,6 @@ public class MainActivity extends Activity {
         });
 
         Button btnAdicionarPendencia = findViewById(R.id.btnAdicionarPendencia);
-        ServicoComObjeto<Versao> servicoComObjeto = new ServicoComObjeto<Versao>(this);
-
-        IAcaoResponse<Versao> acaoResponse = new IAcaoResponse<Versao>() {
-            @Override
-            public void execute(Versao response) {
-                try {
-                    if(response == null)
-                        return;
-                    Log.i("SYNC-RESPONSE", "Compatibilidade: " + response.getCompatibilidade());
-                    Toast.makeText(getApplicationContext(),"Resultado: "+response.getVersao(),Toast.LENGTH_LONG).show();
-                }catch (Exception e){
-                    Toast.makeText(getApplicationContext(),"Erro",Toast.LENGTH_LONG).show();
-                }
-            }
-        };
-
-        IAcaoRequisicao acaoError = new IAcaoRequisicao() {
-            @Override
-            public void execute() {
-                Toast.makeText(getApplicationContext(),"Erro",Toast.LENGTH_LONG).show();
-            }
-        };
-
-        servicoComObjeto.get(acaoResponse,acaoError, "/api/versao",Versao.class);
 
         btnAdicionarPendencia.setOnClickListener(new View.OnClickListener() {
             @Override

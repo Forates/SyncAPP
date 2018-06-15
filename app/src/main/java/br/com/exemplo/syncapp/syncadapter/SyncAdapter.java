@@ -8,13 +8,24 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.android.volley.Response;
+
+import org.json.JSONObject;
 
 import java.io.Serializable;
 
 import br.com.exemplo.syncapp.App;
+import br.com.exemplo.syncapp.model.Versao;
 import br.com.exemplo.syncapp.repositorio.DadosEnvio;
 import br.com.exemplo.syncapp.repositorio.RepositorioEnvio;
 import br.com.exemplo.syncapp.repositorio.RepositorioEnvio_;
+import br.com.exemplo.syncapp.util.api.base.IResponse;
+import br.com.exemplo.syncapp.util.api.base.acao.IAcaoRequisicao;
+import br.com.exemplo.syncapp.util.api.base.acao.IAcaoResponse;
+import br.com.exemplo.syncapp.util.api.base.config.ApiConst;
+import br.com.exemplo.syncapp.util.api.servico.ServicoComString;
 import io.objectbox.Box;
 
 /**
@@ -24,6 +35,7 @@ import io.objectbox.Box;
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     private static String TAG = "SYNC-ADAPTER";
+    private String rota;
     // Global variables
     // Define a variable to contain a content resolver instance
     ContentResolver mContentResolver;
@@ -91,8 +103,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             String endereco = extras.getString("DadosEnvio-Endereco");
             String retorno = extras.getString("DadosEnvio-Retorno");
             String intencaoRetorno = extras.getString("DadosEnvio-IntecaoRetorno");
+            rota = extras.getString("DadosEnvio-RotaApi");
 
-            dadosEnvio = new DadosEnvio(sistema, endereco, retorno, intencaoRetorno);
+            //define o endereço da api para realizar as requisiões
+            ApiConst.ENDERECOAPI = endereco;
+
+            dadosEnvio = new DadosEnvio(sistema, endereco,rota, retorno, intencaoRetorno);
         }
 
         if (dadosEnvio == null) {
@@ -126,15 +142,23 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     }
 
-    private void RealizarOperacaoEnvio(RepositorioEnvio repositorioEnvio) {
+    private void RealizarOperacaoEnvio(final RepositorioEnvio repositorioEnvio) {
+        final ServicoComString servicoComString = new ServicoComString(getContext());
+        servicoComString.post("AQUI VEM O JSON EM STRING", new IResponse() {
+            @Override
+            public Response.Listener<JSONObject> result(JSONObject response) {
+                mBoxRepositorioEnvio.remove(repositorioEnvio);
+                Log.i(TAG, "Pendencia enviada!" + repositorioEnvio.toString());
+                repositorioEnvio.Enviado = "S";
+                mBoxRepositorioEnvio.put(repositorioEnvio);
+                return null;
+            }
 
-        mBoxRepositorioEnvio.remove(repositorioEnvio);
-
-        Log.i(TAG, "Pendencia enviada!" + repositorioEnvio.toString());
-
-        repositorioEnvio.Enviado = "S";
-        mBoxRepositorioEnvio.put(repositorioEnvio);
-
+            @Override
+            public Response.ErrorListener error() {
+                return null;
+            }
+        },rota);
     }
 
 }

@@ -13,7 +13,7 @@ import br.com.exemplo.syncapp.util.api.base.acao.IAcaoRequisicao;
 
 public class ServicoComString  extends ServicoRequisicaoBase{
 
-    protected ServicoComString(Context ctxContexto) {
+    public ServicoComString(Context ctxContexto) {
         super(ctxContexto);
     }
 
@@ -28,7 +28,7 @@ public class ServicoComString  extends ServicoRequisicaoBase{
         }
     }
 
-    public void get (final IAcaoResponse acaoResponse, final IAcaoRequisicao acaoErro, String rota, final Class classe){
+    public void get (final IAcaoResponse acaoResponse, final IAcaoRequisicao acaoErro, String rota){
         try {
             Response.Listener<JSONObject> lstResponse = new Response.Listener<JSONObject>() {
                 @Override
@@ -77,4 +77,13 @@ public class ServicoComString  extends ServicoRequisicaoBase{
         }
     }
 
+    @Override
+    public <T> JSONObject ConverterObjectEmJSON(T clsObjeto) throws JSONException {
+        return super.ConverterObjectEmJSON(clsObjeto);
+    }
+
+    @Override
+    public <T> T ConverterJSONEmObject(JSONObject clsObjeto, Class<T> clClasse) {
+        return super.ConverterJSONEmObject(clsObjeto, clClasse);
+    }
 }

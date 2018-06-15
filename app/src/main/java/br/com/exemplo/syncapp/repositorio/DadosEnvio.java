@@ -12,13 +12,14 @@ public class DadosEnvio implements Serializable {
     public String Endereco;
     public String Retorno;
     public String IntencaoRetorno;
+    public String Rota;
     @Id
     long ID;
 
     public DadosEnvio() {
     }
 
-    public DadosEnvio(String sistema, String endereco, String retorno, String intencaoRetorno) {
+    public DadosEnvio(String sistema, String endereco, String rota, String retorno, String intencaoRetorno) {
 
         Sistema = sistema;
 
@@ -27,6 +28,9 @@ public class DadosEnvio implements Serializable {
         Retorno = retorno;
 
         IntencaoRetorno = intencaoRetorno;
+
+        Rota = rota;
+
     }
 
 }
