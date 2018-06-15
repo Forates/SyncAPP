@@ -19,10 +19,12 @@ public class RepositorioEnvio {
 
     public String Enviado;
 
+    public String Rota;
+
     public RepositorioEnvio() {
     }
 
-    public RepositorioEnvio(String sistema, String endereco, String retorno, String intencaoRetorno) {
+    public RepositorioEnvio(String sistema, String endereco, String rota, String retorno, String intencaoRetorno) {
         Sistema = sistema;
 
         Endereco = endereco;
@@ -30,6 +32,8 @@ public class RepositorioEnvio {
         Retorno = retorno;
 
         IntencaoRetorno = intencaoRetorno;
+
+        Rota = rota;
 
         Enviado = "N";
     }

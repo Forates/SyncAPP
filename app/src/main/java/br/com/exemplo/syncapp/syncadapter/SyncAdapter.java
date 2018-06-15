@@ -35,7 +35,6 @@ import io.objectbox.Box;
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     private static String TAG = "SYNC-ADAPTER";
-    private String rota;
     // Global variables
     // Define a variable to contain a content resolver instance
     ContentResolver mContentResolver;
@@ -103,7 +102,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             String endereco = extras.getString("DadosEnvio-Endereco");
             String retorno = extras.getString("DadosEnvio-Retorno");
             String intencaoRetorno = extras.getString("DadosEnvio-IntecaoRetorno");
-            rota = extras.getString("DadosEnvio-RotaApi");
+            String rota = extras.getString("DadosEnvio-RotaApi");
 
             //define o endereço da api para realizar as requisiões
             ApiConst.ENDERECOAPI = endereco;
@@ -130,35 +129,33 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         }
 
-
     }
 
     private RepositorioEnvio ConverterDadosEnvio(Serializable dadosEnvio) {
 
         DadosEnvio dadosEnvio1 = (DadosEnvio) dadosEnvio;
 
-        return new RepositorioEnvio(dadosEnvio1.Sistema, dadosEnvio1.Endereco,
+        return new RepositorioEnvio(dadosEnvio1.Sistema, dadosEnvio1.Endereco, dadosEnvio1.Rota,
                 dadosEnvio1.Retorno, dadosEnvio1.IntencaoRetorno);
 
     }
 
     private void RealizarOperacaoEnvio(final RepositorioEnvio repositorioEnvio) {
         final ServicoComString servicoComString = new ServicoComString(getContext());
-        servicoComString.post("AQUI VEM O JSON EM STRING", new IResponse() {
+        servicoComString.post(repositorioEnvio.Retorno, new IAcaoResponse() {
             @Override
-            public Response.Listener<JSONObject> result(JSONObject response) {
+            public void execute(Object response) {
                 mBoxRepositorioEnvio.remove(repositorioEnvio);
                 Log.i(TAG, "Pendencia enviada!" + repositorioEnvio.toString());
                 repositorioEnvio.Enviado = "S";
                 mBoxRepositorioEnvio.put(repositorioEnvio);
-                return null;
             }
-
+        }, new IAcaoRequisicao() {
             @Override
-            public Response.ErrorListener error() {
-                return null;
+            public void execute() {
+
             }
-        },rota);
+        }, repositorioEnvio.Rota);
     }
 
 }

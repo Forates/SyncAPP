@@ -121,6 +121,7 @@ public class MainActivity extends Activity {
             settingsBundle.putString("DadosEnvio-Endereco", RetornarDadosEnvio().Endereco);
             settingsBundle.putString("DadosEnvio-Retorno", RetornarDadosEnvio().Retorno);
             settingsBundle.putString("DadosEnvio-IntecaoRetorno", RetornarDadosEnvio().IntencaoRetorno);
+            settingsBundle.putString("DadosEnvio-RotaApi",RetornarDadosEnvio().Rota);
         }
 
         /*
@@ -144,7 +145,19 @@ public class MainActivity extends Activity {
     }
 
     private DadosEnvio RetornarDadosEnvio() {
-        return new DadosEnvio("Reader", "http://www.google.com.br", "OK!", "ok");
+        //return new DadosEnvio("Reader", "http://www.google.com.br","", "OK!", "ok");
+        return new DadosEnvio("Reader", "http://192.168.0.117:8058","/api/chat/criar", "{\n" +
+                "    \"chtMsg_Codigo\": 852,\n" +
+                "    \"lei_Codigo\": 1,\n" +
+                "    \"chtMsg_Destinatario\": \"ALTAIR RODRIGUES DE MORAES\",\n" +
+                "    \"chtMsg_Remetente\": \"Central\",\n" +
+                "    \"chtMsg_Data_Hora\": \"2018-02-23T16:36:59.03\",\n" +
+                "    \"chtMsg_Mensagem\": \"COMUNICADO\",\n" +
+                "    \"chtMsg_Status_Cliente\": 2,\n" +
+                "    \"chtMsg_Status_Central\": 2,\n" +
+                "    \"hora\": \"23/02/2018 16:36:59\"\n" +
+                "  }", "ok");
+
     }
 
 }

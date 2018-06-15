@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:2177972329912135956",
-      "lastPropertyId": "5:2580150709429865426",
+      "lastPropertyId": "6:9002604883302955389",
       "name": "DadosEnvio",
       "properties": [
         {
@@ -27,13 +27,17 @@
         {
           "id": "5:2580150709429865426",
           "name": "ID"
+        },
+        {
+          "id": "6:9002604883302955389",
+          "name": "Rota"
         }
       ],
       "relations": []
     },
     {
       "id": "2:6138274954264619105",
-      "lastPropertyId": "6:1146846692101399326",
+      "lastPropertyId": "7:2312390452723217092",
       "name": "RepositorioEnvio",
       "properties": [
         {
@@ -59,6 +63,10 @@
         {
           "id": "6:1146846692101399326",
           "name": "Enviado"
+        },
+        {
+          "id": "7:2312390452723217092",
+          "name": "Rota"
         }
       ],
       "relations": []
